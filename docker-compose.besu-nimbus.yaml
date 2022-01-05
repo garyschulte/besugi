@@ -40,7 +40,7 @@ services:
       --miner-coinbase="${COINBASE}"
     network_mode: host
   nimbus:
-    image: parithoshj/nimbus:merge-e623091
+    image: parithoshj/nimbus:merge-d5c48e1
     container_name: nimbus
     volumes:
       - ./nimbus_data:/consensus_data
