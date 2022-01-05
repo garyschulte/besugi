@@ -39,9 +39,9 @@ services:
       --bootnodes=$ENODE
       --miner-coinbase="${COINBASE}"
     network_mode: host
-  lodestar_beacon:
+  lodestar:
     image: chainsafe/lodestar:next
-    container_name: lodestar_beacon
+    container_name: lodestar
     volumes:
       - ./lodestar_data:/consensus_data
       - ./config:/config
