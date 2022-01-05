@@ -1,0 +1,55 @@
+version: "3.4"
+services:
+  eth2_val_tools:
+    image: suburbandad/eth2-val-tools:latest
+    container_name: keytool
+    volumes:
+      - ./lodestar_data:/validator_data
+    command: >
+      keystores
+      --insecure
+      --prysm-pass="prysm"
+      --out-loc="/validator_data/keys"
+      --source-max=${VALIDATOR_INDEX_MAX}
+      --source-min=${VALIDATOR_INDEX_MIN}
+      --source-mnemonic="${VALIDATOR_MNEMONIC}"
+  besu:
+    image: suburbandad/besu:kintsugi-v3
+    container_name: besu
+    volumes:
+      - ./execution_data:/execution_data
+      - ./config:/config
+    command: >
+      --data-path="/execution_data"
+      --genesis-file="/config/besu_genesis.json"
+      --network-id=$NETWORK_ID
+      --rpc-http-enabled=true
+      --rpc-ws-enabled=true
+      --rpc-http-api=ADMIN,CLIQUE,MINER,ETH,NET,DEBUG,TXPOOL,EXECUTION
+      --rpc-ws-api=ADMIN,CLIQUE,MINER,ETH,NET,DEBUG,TXPOOL,EXECUTION
+      --host-allowlist="*"
+      --rpc-http-cors-origins="*"
+      --p2p-enabled=true
+      --Xmerge-support=true
+      --Xdata-storage-format="BONSAI"
+      --miner-enabled=true
+      --rpc-http-host=0.0.0.0
+      --rpc-ws-host=0.0.0.0
+      --p2p-host=$IP_ADDRESS
+      --bootnodes=$ENODE
+      --miner-coinbase="${COINBASE}"
+    network_mode: host
+  lodestar_beacon:
+    image: chainsafe/lodestar:next
+    container_name: lodestar_beacon
+    volumes:
+      - ./lodestar_data:/consensus_data
+      - ./config:/config
+    command: >
+      beacon --rootDir=/consensus_data --paramsFile=/config/config.yaml
+      --genesisStateFile=/config/genesis.ssz --network.discv5.bootEnrs=$ENR
+      --network.connectToDiscv5Bootnodes --network.discv5.enabled=true --eth1.enabled=true
+      --api.rest.port=4000 --eth1.disableEth1DepositDataTracker=true
+      --eth1.providerUrls=http://127.0.0.1:8545 --execution.urls=http://127.0.0.1:8545
+      --api.rest.enabled=true --api.rest.host=0.0.0.0 --api.rest.api="*" --enr.ip=$IP_ADDRESS
+    network_mode: host

@@ -1,0 +1,14 @@
+version: "3.4"
+services:
+  eth2_val_tools:
+    image: suburbandad/eth2-val-tools:latest
+    volumes:
+      - ./validator_data:/validator_data
+    command: >
+      keystores
+      --insecure
+      --prysm-pass="prysm"
+      --out-loc="/validator_data/keys"
+      --source-max=${VALIDATOR_INDEX_MAX}
+      --source-min=${VALIDATOR_INDEX_MIN}
+      --source-mnemonic="${VALIDATOR_MNEMONIC}"
