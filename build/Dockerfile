@@ -9,9 +9,9 @@ FROM alpine:latest
 
 WORKDIR /app
 
-COPY --from=builder /go/bin/* .
+COPY --from=builder /go/bin/* /app/
 
-RUN apk add --no-cache jq 
+RUN apk add --no-cache jq bash
 
 COPY exec_deposits.sh .
 
