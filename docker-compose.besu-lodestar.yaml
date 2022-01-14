@@ -40,9 +40,9 @@ services:
       --ethstats="${HOST_NAME}:KintsugiNetwork@ethstats.kintsugi.themerge.dev:443"
       --miner-coinbase="${COINBASE}"
     network_mode: host
-  lodestar:
+  lodestar-bn:
     image: chainsafe/lodestar:next
-    container_name: lodestar
+    container_name: lodestar-bn
     depends_on: 
       - besu
       - keytool
@@ -56,4 +56,25 @@ services:
       --api.rest.port=4000 --eth1.disableEth1DepositDataTracker=true
       --eth1.providerUrls=http://127.0.0.1:8545 --execution.urls=http://127.0.0.1:8545
       --api.rest.enabled=true --api.rest.host=0.0.0.0 --api.rest.api="*" --enr.ip=$IP_ADDRESS
+    network_mode: host
+  lodestar-vc:
+    image: chainsafe/lodestar:next
+    container_name: lodestar-vc
+    depends_on: 
+      - lodestar-bn
+    volumes:
+      - ./lodestar_data:/consensus_data
+      - ./config:/config
+    command: >
+      validator
+       --rootDir=/consensus_data
+       --paramsFile=/config/config.yaml
+       --keystoresDir=keys/keys
+       --secretsDir=keys/lodestar-secrets
+       --server=http://127.0.0.1:4000
+       --logFile=/validatordata/validator.log
+       --logLevelFile=debug
+       --logRotate
+       --logMaxFiles=5
+      --graffiti="{$HOST_NAME}"
     network_mode: host
