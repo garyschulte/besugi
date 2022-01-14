@@ -4,7 +4,7 @@ services:
     image: suburbandad/eth2-val-tools:latest
     container_name: keytool
     volumes:
-      - ./lighthouse_data:/validator_data
+      - ./secrets:/validator_data
     command: >
       keystores
       --insecure
@@ -37,7 +37,7 @@ services:
       --rpc-ws-host=0.0.0.0
       --p2p-host=$IP_ADDRESS
       --bootnodes=$ENODE
-      --ethstats=$HOST_NAME:KintsugiNetwork@ethstats.kintsugi.themerge.dev:443
+      --ethstats="${HOST_NAME}:KintsugiNetwork@ethstats.kintsugi.themerge.dev:443"
       --miner-coinbase="${COINBASE}"
     network_mode: host
   lighthouse:
@@ -47,6 +47,8 @@ services:
       - besu
     volumes:
       - ./lighthouse_data:/lighthouse_data
+      - ./secrets/keys/keys:/lighthouse_data/keys
+      - ./secrets/keys/secrets:/lighthouse_data/secrets
       - ./config:/config
     command: >
       lighthouse --debug-level=info --datadir=/lighthouse_data

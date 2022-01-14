@@ -4,7 +4,7 @@ services:
     image: suburbandad/eth2-val-tools:latest
     container_name: keytool
     volumes:
-      - ./teku_data:/validator_data
+      - ./secrets:/validator_data
     command: >
       keystores
       --insecure
@@ -38,7 +38,8 @@ services:
       --rpc-ws-host=0.0.0.0
       --p2p-host=$IP_ADDRESS
       --bootnodes=$ENODE
-      --ethstats=$HOST_NAME:KintsugiNetwork@ethstats.kintsugi.themerge.dev:443
+      --ethstats="${HOST_NAME}:KintsugiNetwork@ethstats.kintsugi.themerge.dev:443"
+      --validator-keys=/consensus_data/keys/teku-keys:/consensus_data/keys/teku-secrets
       --miner-coinbase="${COINBASE}"
     network_mode: host
   teku:
@@ -46,6 +47,8 @@ services:
     container_name: teku
     volumes:
       - ./teku_data:/consensus_data
+      - ./secrets/keys/teku-keys:/keys
+      - ./secrets/keys/teku-secrets:/secrets
       - ./config:/config
     command: >
       --network "/config/config.yaml"
@@ -59,5 +62,6 @@ services:
       --rest-api-host-allowlist=*   --data-storage-non-canonical-blocks-enabled=true
       --Xnetwork-merge-total-terminal-difficulty-override=$TOTAL_TERMINAL_DIFFICULTY
       --Xvalidators-suggested-fee-recipient-address="${COINBASE}"
+      --validator-keys=/keys:/secrets
       --log-destination=CONSOLE
     network_mode: host
