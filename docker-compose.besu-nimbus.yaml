@@ -55,4 +55,7 @@ services:
       --bootstrap-node=$ENR --nat="extip:$IP_ADDRESS" --enr-auto-update=false
       --rest --rest-port=4000
       --terminal-total-difficulty-override=$TOTAL_TERMINAL_DIFFICULTY
+      --validators-dir="/consensus_data/keys/nimbus-keys"
+      --secrets-dir="/consensus_data/keys/secrets"
+      --graffiti="${HOST_NAME}"
     network_mode: host
