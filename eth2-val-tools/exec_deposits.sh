@@ -8,17 +8,35 @@ then
     [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
-source secrets.env
+source kintsugi.env
+
+if [[ -z "${VALIDATORS_MNEMONIC}" ]]; then
+  read -p "Enter the validator mnemonic or <enter> to generate it: " -r
+  echo
+  if [[ -z "${REPLY}" ]]; then
+    VALIDATORS_MNEMONIC=`eth2-val-tools mnemonic | tee /tmp/secrets/validator_seed.txt`
+  else 
+    VALIDATORS_MNEMONIC="${REPLY}"
+  fi
+fi
+
+if [[ -z "${WITHDRAWALS_MNEMONIC}" ]]; then
+  WITHDRAWALS_MNEMONIC="${VALIDATORS_MNEMONIC}"
+fi
 
 if [[ -z "${ETH1_FROM_ADDR}" ]]; then
-  echo "need ETH1_FROM_ADDR environment var"
-  exit 1 || return 1
-fi
-if [[ -z "${ETH1_FROM_PRIV}" ]]; then
-  echo "need ETH1_FROM_PRIV environment var"
-  exit 1 || return 1
+  read -p "Enter the eth1 address to deposit from: " -r
+  echo
+  ETH1_FROM_ADDR="${REPLY}"
 fi
 
+if [[ -z "${ETH1_FROM_PRIV}" ]]; then
+  read -p "Enter the private key for your eth1 address: " -r
+  echo
+  ETH1_FROM_PRIV=${REPLY}
+fi
+
+echo "using: \n\tETH1_FROM_ADDR: $ETH1_FROM_ADDR \n\tETH1_FROM_PRIV: $ETH1_FROM_PRIV\n\tVALIDATORS_MNEMONIC: $VALIDATORS_MNEMONIC\n\tWITHDRAWALS_MNEMONIC: $WITHDRAWALS_MNEMONIC"
 
 eth2-val-tools deposit-data \
   --source-min=0 \

@@ -16,6 +16,7 @@ services:
   besu:
     image: suburbandad/besu:kintsugi-v3
     container_name: besu
+    user: root
     volumes:
       - ./execution_data:/execution_data
       - ./config:/config
