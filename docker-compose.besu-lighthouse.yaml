@@ -40,16 +40,14 @@ services:
       --ethstats="${HOST_NAME}:KintsugiNetwork@ethstats.kintsugi.themerge.dev:443"
       --miner-coinbase="${COINBASE}"
     network_mode: host
-  lighthouse:
+  lighthouse-bn:
     image: sigp/lighthouse:latest-unstable
-    container_name: lighthouse
+    container_name: lighthouse-bn
     depends_on: 
       - besu
       - keytool
     volumes:
       - ./lighthouse_data:/lighthouse_data
-      - ./secrets/keys/keys:/lighthouse_data/keys
-      - ./secrets/keys/secrets:/lighthouse_data/secrets
       - ./config:/config
     command: >
       lighthouse --debug-level=info --datadir=/lighthouse_data
@@ -58,3 +56,24 @@ services:
       --merge --http-allow-sync-stalled --disable-packet-filter
       --execution-endpoints=http://127.0.0.1:8545 --terminal-total-difficulty-override=$TOTAL_TERMINAL_DIFFICULTY
     network_mode: host
+
+  lighthouse-vc:
+    image: sigp/lighthouse:latest-unstable
+    container_name: lighthouse-vc
+    depends_on: 
+      - lighthouse-bn
+    volumes:
+      - ./secrets/keys/keys:/keys
+      - ./secrets/keys/secrets:/secrets
+      - ./config:/config
+    command: >
+      lighthouse
+      --testnet-dir="/config"
+      vc
+      --validators-dir="/keys"
+      --secrets-dir="/secrets"
+      --init-slashing-protection
+      --server=http://127.0.0.1:4000
+      --graffiti="${HOST_NAME}"
+      --http 
+      
