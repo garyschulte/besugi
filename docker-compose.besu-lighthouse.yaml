@@ -1,6 +1,6 @@
 version: "3.4"
 services:
-  eth2_val_tools:
+  keytool:
     image: suburbandad/eth2-val-tools:latest
     container_name: keytool
     volumes:
@@ -45,6 +45,7 @@ services:
     container_name: lighthouse
     depends_on: 
       - besu
+      - keytool
     volumes:
       - ./lighthouse_data:/lighthouse_data
       - ./secrets/keys/keys:/lighthouse_data/keys

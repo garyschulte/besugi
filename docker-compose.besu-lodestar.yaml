@@ -1,10 +1,10 @@
 version: "3.4"
 services:
-  eth2_val_tools:
+  keytool:
     image: suburbandad/eth2-val-tools:latest
     container_name: keytool
     volumes:
-      - ./lodestar_data:/validator_data
+      - ./secrets:/validator_data
     command: >
       keystores
       --insecure
@@ -43,6 +43,9 @@ services:
   lodestar:
     image: chainsafe/lodestar:next
     container_name: lodestar
+    depends_on: 
+      - besu
+      - keytool
     volumes:
       - ./lodestar_data:/consensus_data
       - ./config:/config

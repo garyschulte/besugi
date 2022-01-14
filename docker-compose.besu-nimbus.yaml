@@ -1,10 +1,10 @@
 version: "3.4"
 services:
-  eth2_val_tools:
+  keytool:
     image: suburbandad/eth2-val-tools:latest
     container_name: keytool
     volumes:
-      - ./nimbus_data:/validator_data
+      - ./secrets:/validator_data
     command: >
       keystores
       --insecure
@@ -43,6 +43,9 @@ services:
   nimbus:
     image: parithoshj/nimbus:merge-d5c48e1
     container_name: nimbus
+    depends_on: 
+      - besu
+      - keytool
     volumes:
       - ./nimbus_data:/consensus_data
       - ./config:/config

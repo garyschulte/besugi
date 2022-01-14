@@ -1,6 +1,6 @@
 version: "3.4"
 services:
-  eth2_val_tools:
+  keytool:
     image: suburbandad/eth2-val-tools:latest
     container_name: keytool
     volumes:
@@ -45,6 +45,9 @@ services:
   teku:
     image: consensys/teku:latest
     container_name: teku
+    depends_on: 
+      - besu
+      - keytool
     volumes:
       - ./teku_data:/consensus_data
       - ./secrets/keys/teku-keys:/keys
