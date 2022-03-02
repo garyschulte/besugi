@@ -69,8 +69,8 @@ services:
       validator
        --rootDir=/consensus_data
        --paramsFile=/config/config.yaml
-       --keystoresDir=keys/keys
-       --secretsDir=keys/lodestar-secrets
+       --keystoresDir=/consensus_data/keys/keys
+       --secretsDir=/consensus_data/keys/lodestar-secrets
        --server=http://127.0.0.1:4000
        --logFile=/validatordata/validator.log
        --logLevelFile=debug

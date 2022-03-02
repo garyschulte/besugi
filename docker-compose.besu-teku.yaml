@@ -12,7 +12,7 @@ services:
       --out-loc="/validator_data/keys"
       --source-max=${VALIDATOR_INDEX_MAX}
       --source-min=${VALIDATOR_INDEX_MIN}
-      --source-mnemonic="${VALIDATOR_MNEMONIC}"
+      --source-mnemonic="${VALIDATORS_MNEMONIC}"
   besu:
     image: suburbandad/besu:kintsugi-v3
     container_name: besu
@@ -39,7 +39,6 @@ services:
       --p2p-host=$IP_ADDRESS
       --bootnodes=$ENODE
       --ethstats="${HOST_NAME}:KintsugiNetwork@ethstats.kintsugi.themerge.dev:443"
-      --validator-keys=/consensus_data/keys/teku-keys:/consensus_data/keys/teku-secrets
       --miner-coinbase="${COINBASE}"
     network_mode: host
   teku:
