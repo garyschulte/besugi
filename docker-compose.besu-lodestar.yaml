@@ -65,12 +65,13 @@ services:
     volumes:
       - ./lodestar_data:/consensus_data
       - ./config:/config
+      - ./secrets/keys:/secrets
     command: >
       validator
        --rootDir=/consensus_data
        --paramsFile=/config/config.yaml
-       --keystoresDir=/consensus_data/keys/keys
-       --secretsDir=/consensus_data/keys/lodestar-secrets
+       --keystoresDir=/secrets/keys
+       --secretsDir=/secrets/lodestar-secrets
        --server=http://127.0.0.1:4000
        --logFile=/validatordata/validator.log
        --logLevelFile=debug

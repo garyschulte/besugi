@@ -1,10 +1,9 @@
 {
   "config": {
-    "chainId": 1337702,
+    "chainId": 1337752,
     "homesteadBlock": 0,
     "eip150Block": 0,
     "eip155Block": 0,
-    "ethash": {},
     "eip158Block": 0,
     "byzantiumBlock": 0,
     "constantinopleBlock": 0,
@@ -12,7 +11,8 @@
     "istanbulBlock": 0,
     "berlinBlock": 0,
     "londonBlock": 0,
-    "preMergeForkBlock": 100,
+    "premergeForkBlock": 100,
+    "ethash": {},
     "terminalTotalDifficulty": 5000000000
   },
   "alloc": {
@@ -841,7 +841,6 @@
     }
   },
   "coinbase": "0x0000000000000000000000000000000000000000",
-  "baseFeePerGas": "0x3B9ACA00",
   "difficulty": "0x01",
   "extraData": "",
   "gasLimit": "0x400000",

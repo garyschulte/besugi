@@ -1,0 +1,55 @@
+version: "3.4"
+services:
+  besu:
+    image: besu:devnet4
+    container_name: besu
+    user: root
+    volumes:
+      - ./execution_data:/execution_data
+      - ./config:/config
+    command: >
+      --data-path="/execution_data"
+      --genesis-file="/config/besu_genesis.json"
+      --network-id=$NETWORK_ID
+      --rpc-http-enabled=true
+      --rpc-ws-enabled=true
+      --rpc-http-api=ADMIN,ETH,NET,DEBUG
+      --rpc-ws-api=ADMIN,CLIQUE,MINER,ETH,NET,DEBUG,TXPOOL,ENGINE
+      --host-allowlist="*"
+      --engine-host-allowlist="*"
+      --rpc-http-cors-origins="*"
+      --p2p-enabled=true
+      --Xmerge-support=true
+      --miner-enabled=true
+      --rpc-http-host=0.0.0.0
+      --rpc-ws-host=0.0.0.0
+      --p2p-host=$IP_ADDRESS
+      --bootnodes=$ENODE
+      --ethstats="${HOST_NAME}:KintsugiNetwork@ethstats.kintsugi.themerge.dev:443"
+      --miner-coinbase="${COINBASE}"
+    network_mode: host
+  teku:
+    image: consensys/teku:develop
+    container_name: teku
+    depends_on: 
+      - besu
+        #  - keytool
+    volumes:
+      - ./teku_data:/consensus_data
+      - ./secrets/keys/teku-keys:/keys
+      - ./secrets/keys/teku-secrets:/secrets
+      - ./config:/config
+    command: >
+      --network "/config/config.yaml"
+      --initial-state "/config/genesis.ssz"
+      --data-path "/consensus_data" --data-storage-mode=PRUNE
+      --p2p-enabled=true --eth1-endpoints=http://127.0.0.1:8545
+      --Xee-endpoint=http://127.0.0.1:8550 --Xee-version=kiln
+      --p2p-advertised-ip=$IP_ADDRESS --p2p-discovery-bootnodes=$ENR
+      --rest-api-enabled=true --rest-api-docs-enabled=true
+      --rest-api-interface=0.0.0.0 --rest-api-port=4000
+      --rest-api-host-allowlist=*   --data-storage-non-canonical-blocks-enabled=true
+      --Xvalidators-proposer-default-fee-recipient="${COINBASE}"
+      --validator-keys=/keys:/secrets
+      --log-destination=CONSOLE
+    network_mode: host
