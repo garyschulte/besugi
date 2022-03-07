@@ -1,0 +1,30 @@
+version: "3.4"
+services:
+  besu:
+    image: hyperledger/besu:22.1.2-SNAPSHOT
+    container_name: besu
+    volumes:
+      - ./execution_data:/execution_data
+      - ./config:/config
+    command: >
+      --data-path="/execution_data"
+      --genesis-file="/config/besu_genesis.json"
+      --network-id=$NETWORK_ID
+      --rpc-http-enabled=true
+      --rpc-ws-enabled=true
+      --rpc-http-api=ADMIN,MINER,ETH,NET,DEBUG,TXPOOL
+      --rpc-ws-api=ADMIN,MINER,ETH,NET,DEBUG,TXPOOL
+      --host-allowlist="*"
+      --rpc-http-cors-origins="*"
+      --p2p-enabled=true
+      --Xmerge-support=true
+      --Xdata-storage-format="BONSAI"
+      --rpc-http-host=0.0.0.0
+      --rpc-ws-host=0.0.0.0
+      --p2p-host=$IP_ADDRESS
+      --bootnodes=$ENODE
+      --miner-coinbase="${COINBASE}"
+      --miner-enabled=true
+      --miner-stratum-enabled=true
+      --miner-stratum-host="0.0.0.0"
+    network_mode: host
