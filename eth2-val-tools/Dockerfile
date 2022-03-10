@@ -10,7 +10,7 @@ RUN apt update && apt install -y jq bash
 
 COPY exec_deposits.sh .
 
-COPY kintsugi.env .
+COPY kiln.env .
 
 RUN chmod 755 /app/exec_deposits.sh
 

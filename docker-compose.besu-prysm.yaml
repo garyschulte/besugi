@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   eth2_val_tools:
-    image: suburbandad/eth2-val-tools:latest
+    image: besugi/eth2-val-tools:latest
     volumes:
       - ./validator_data:/validator_data
     command: >
@@ -13,7 +13,7 @@ services:
       --source-min=${VALIDATOR_INDEX_MIN}
       --source-mnemonic="${VALIDATOR_MNEMONIC}"
   besu:
-    image: suburbandad/besu:kintsugi-v3
+    image: hyperledger/besu:22.1.2-SNAPSHOT
     container_name: besu
     volumes:
       - ./execution_data:/execution_data

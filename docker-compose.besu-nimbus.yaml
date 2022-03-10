@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   keytool:
-    image: suburbandad/eth2-val-tools:latest
+    image: besugi/eth2-val-tools:latest
     container_name: keytool
     volumes:
       - ./secrets:/validator_data
@@ -14,30 +14,27 @@ services:
       --source-min=${VALIDATOR_INDEX_MIN}
       --source-mnemonic="${VALIDATORS_MNEMONIC}"
   besu:
-    image: suburbandad/besu:kintsugi-v3
+    image: hyperledger/besu:22.1.2-SNAPSHOT
     container_name: besu
     volumes:
       - ./execution_data:/execution_data
       - ./config:/config
     command: >
+      --network=kiln
       --data-path="/execution_data"
-      --genesis-file="/config/besu_genesis.json"
-      --network-id=$NETWORK_ID
       --rpc-http-enabled=true
       --rpc-ws-enabled=true
-      --rpc-http-api=ADMIN,CLIQUE,MINER,ETH,NET,DEBUG,TXPOOL,EXECUTION
-      --rpc-ws-api=ADMIN,CLIQUE,MINER,ETH,NET,DEBUG,TXPOOL,EXECUTION
       --host-allowlist="*"
       --rpc-http-cors-origins="*"
       --p2p-enabled=true
       --Xmerge-support=true
       --Xdata-storage-format="BONSAI"
+      --engine-host-allowlist="*"
       --miner-enabled=true
       --rpc-http-host=0.0.0.0
       --rpc-ws-host=0.0.0.0
       --p2p-host=$IP_ADDRESS
       --bootnodes=$ENODE
-      --ethstats="${HOST_NAME}:KintsugiNetwork@ethstats.kintsugi.themerge.dev:443"
       --miner-coinbase="${COINBASE}"
     network_mode: host
   nimbus:
@@ -57,5 +54,8 @@ services:
       --terminal-total-difficulty-override=$TOTAL_TERMINAL_DIFFICULTY
       --validators-dir="/consensus_data/keys/nimbus-keys"
       --secrets-dir="/consensus_data/keys/secrets"
-      --graffiti="${HOST_NAME}"
+      --listen-address=0.0.0.0
+      --graffiti="besugi-nimbus"
+      --rest-address=0.0.0.0
+      --doppelganger-detection=off
     network_mode: host
