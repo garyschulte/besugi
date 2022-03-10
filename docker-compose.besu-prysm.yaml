@@ -35,6 +35,5 @@ services:
       --rpc-ws-host=0.0.0.0
       --p2p-host=$IP_ADDRESS
       --bootnodes=$ENODE
-      --ethstats=$HOST_NAME:KintsugiNetwork@ethstats.kintsugi.themerge.dev:443
       --miner-coinbase="0xFE3B557E8Fb62b89F4916B721be55cEb828dBd73"
     network_mode: host

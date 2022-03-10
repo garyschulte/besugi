@@ -29,6 +29,7 @@ services:
       --p2p-enabled=true
       --Xmerge-support=true
       --Xdata-storage-format="BONSAI"
+      --rpc-ws-api=ADMIN,MINER,ETH,NET,DEBUG,TXPOOL,ENGINE
       --engine-host-allowlist="*"
       --miner-enabled=true
       --rpc-http-host=0.0.0.0
@@ -38,13 +39,14 @@ services:
       --miner-coinbase="${COINBASE}"
     network_mode: host
   nimbus:
-    image: parithoshj/nimbus:merge-d5c48e1
+    image: parithoshj/nimbus:merge-f6e4c31
     container_name: nimbus
     depends_on: 
       - besu
       - keytool
     volumes:
       - ./nimbus_data:/consensus_data
+      - ./secrets/keys:/keys
       - ./config:/config
     command: >
       beacon_node --non-interactive=true --network="/config"
@@ -52,8 +54,8 @@ services:
       --bootstrap-node=$ENR --nat="extip:$IP_ADDRESS" --enr-auto-update=false
       --rest --rest-port=4000
       --terminal-total-difficulty-override=$TOTAL_TERMINAL_DIFFICULTY
-      --validators-dir="/consensus_data/keys/nimbus-keys"
-      --secrets-dir="/consensus_data/keys/secrets"
+      --validators-dir="/keys/nimbus-keys"
+      --secrets-dir="/keys/secrets"
       --listen-address=0.0.0.0
       --graffiti="besugi-nimbus"
       --rest-address=0.0.0.0
