@@ -28,7 +28,7 @@ services:
       --rpc-http-cors-origins="*"
       --p2p-enabled=true
       --Xmerge-support=true
-      --Xdata-storage-format="BONSAI"
+      --data-storage-format="BONSAI"
       --engine-host-allowlist="*"
       --miner-enabled=true
       --rpc-http-host=0.0.0.0

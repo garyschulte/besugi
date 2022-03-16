@@ -28,7 +28,7 @@ services:
       --rpc-http-cors-origins="*"
       --p2p-enabled=true
       --Xmerge-support=true
-      --Xdata-storage-format="BONSAI"
+      --data-storage-format="BONSAI"
       --rpc-ws-api=ADMIN,MINER,ETH,NET,DEBUG,TXPOOL,ENGINE
       --engine-host-allowlist="*"
       --miner-enabled=true
@@ -39,7 +39,7 @@ services:
       --miner-coinbase="${COINBASE}"
     network_mode: host
   nimbus:
-    image: parithoshj/nimbus:merge-f6e4c31
+    image: parithoshj/nimbus:merge-a35c5f8
     container_name: nimbus
     depends_on: 
       - besu
