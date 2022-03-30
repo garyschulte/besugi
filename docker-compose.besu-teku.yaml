@@ -61,11 +61,11 @@ services:
       --rest-api-enabled=true --rest-api-docs-enabled=true
       --rest-api-interface=0.0.0.0 --rest-api-port=4000
       --rest-api-host-allowlist=* --data-storage-non-canonical-blocks-enabled=true
-      --network-merge-total-terminal-difficulty-override=$TOTAL_TERMINAL_DIFFICULTY
+      --Xnetwork-merge-total-terminal-difficulty-override=$TOTAL_TERMINAL_DIFFICULTY
       --validators-proposer-default-fee-recipient="${COINBASE}"
       --validator-keys=/keys:/secrets
       --log-destination=CONSOLE
-      --ee-version=kilnv2
+      --Xee-version=kilnv2
       --validators-graffiti="besugi-teku"
       --validators-keystore-locking-enabled=false
     network_mode: host
