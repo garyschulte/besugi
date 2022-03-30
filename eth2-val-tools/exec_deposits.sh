@@ -8,7 +8,7 @@ then
     [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
-source goerli-shadow-fork-1.env
+source goerli-shadow-fork-2.env
 
 if [[ -z "${VALIDATORS_MNEMONIC}" ]]; then
   read -p "Enter the validator mnemonic or <enter> to generate it: " -r
