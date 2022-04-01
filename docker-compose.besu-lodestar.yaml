@@ -14,7 +14,7 @@ services:
       --source-min=${VALIDATOR_INDEX_MIN}
       --source-mnemonic="${VALIDATORS_MNEMONIC}"
   besu:
-    image: hyperledger/besu:22.1.2-SNAPSHOT
+    image: hyperledger/besu:22.1.4-SNAPSHOT
     container_name: besu
     volumes:
       - ./execution_data:/execution_data
@@ -35,7 +35,6 @@ services:
       --rpc-http-host=0.0.0.0
       --rpc-ws-host=0.0.0.0
       --p2p-host=$IP_ADDRESS
-      --bootnodes=$ENODE
       --miner-coinbase="${COINBASE}"
     network_mode: host
   lodestar-bn:
