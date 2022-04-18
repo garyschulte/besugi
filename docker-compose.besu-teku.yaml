@@ -23,7 +23,7 @@ services:
     command: >
       --genesis-file="/config/besu_genesis.json"
       --network-id=$NETWORK_ID
-      --sync-mode="FAST"
+      --sync-mode="X_SNAP"
       --data-path="/execution_data"
       --rpc-http-enabled=true
       --rpc-ws-enabled=true

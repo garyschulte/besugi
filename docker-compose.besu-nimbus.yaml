@@ -20,7 +20,9 @@ services:
       - ./execution_data:/execution_data
       - ./config:/config
     command: >
-      --network=kiln
+      --genesis-file="/config/besu_genesis.json"
+      --network-id=$NETWORK_ID
+      --sync-mode="X_SNAP"
       --data-path="/execution_data"
       --rpc-http-enabled=true
       --rpc-ws-enabled=true
