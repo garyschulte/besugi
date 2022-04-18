@@ -1,9 +1,10 @@
 version: "3.4"
 services:
-  eth2_val_tools:
+  keytool:
     image: besugi/eth2-val-tools:latest
+    container_name: keytool
     volumes:
-      - ./validator_data:/validator_data
+      - ./secrets:/validator_data
     command: >
       keystores
       --insecure
@@ -11,29 +12,51 @@ services:
       --out-loc="/validator_data/keys"
       --source-max=${VALIDATOR_INDEX_MAX}
       --source-min=${VALIDATOR_INDEX_MIN}
-      --source-mnemonic="${VALIDATOR_MNEMONIC}"
+      --source-mnemonic="${VALIDATORS_MNEMONIC}"
   besu:
-    image: hyperledger/besu:22.1.2-SNAPSHOT
+    image: hyperledger/besu:22.4.0-RC2-SNAPSHOT
     container_name: besu
+    user: root
     volumes:
       - ./execution_data:/execution_data
       - ./config:/config
     command: >
+      --network=kiln
       --data-path="/execution_data"
-      --genesis-file="/config/besu_genesis.json"
-      --network-id=$NETWORK_ID
       --rpc-http-enabled=true
       --rpc-ws-enabled=true
-      --rpc-http-api=ADMIN,CLIQUE,MINER,ETH,NET,DEBUG,TXPOOL,EXECUTION
-      --rpc-ws-api=ADMIN,CLIQUE,MINER,ETH,NET,DEBUG,TXPOOL,EXECUTION
       --host-allowlist="*"
       --rpc-http-cors-origins="*"
+      --rpc-http-api=ADMIN,ETH,NET,DEBUG,TXPOOL
       --p2p-enabled=true
       --Xmerge-support=true
+      --data-storage-format="BONSAI"
+      --engine-host-allowlist="*"
       --miner-enabled=true
       --rpc-http-host=0.0.0.0
       --rpc-ws-host=0.0.0.0
       --p2p-host=$IP_ADDRESS
       --bootnodes=$ENODE
-      --miner-coinbase="0xFE3B557E8Fb62b89F4916B721be55cEb828dBd73"
+      --miner-coinbase="${COINBASE}"
+    network_mode: host
+  prysm:
+    image: gcr.io/prysmaticlabs/prysm/beacon-chain:kiln-b9ffd6
+    container_name: prysm
+    depends_on: 
+      - besu
+      - keytool
+    volumes:
+      - ./prysm_data:/prysm_data
+      - ./secrets/keys/prysm-keys:/keys
+      - ./secrets/keys/prysm:/secrets
+      - ./config:/config
+    command: >
+      --accept-terms-of-use
+      --genesis-state /config/genesis.ssz 
+      --datadir /prysm_data 
+      --http-web3provider=http://localhost:8550 
+      --min-sync-peers=1 
+      --chain-config-file /config/config.yaml 
+      --bootstrap-node "${ENR}" 
+      --suggested-fee-recipient "${COINBASE}"
     network_mode: host
